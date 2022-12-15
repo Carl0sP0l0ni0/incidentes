@@ -16,31 +16,52 @@
         <thead>
             <tr>
                 <th scope="col">ID</th>
+                <th scope="col">Usuario</th>
                 <th scope="col">Tipo</th>
                 <th scope="col">Estado carretera</th>
                 <th scope="col">Estado trafico</th>
                 <th scope="col">Foto</th>
+
+                <th scope="col">Region</th>
+                <th scope="col">Provincia</th>
+                <th scope="col">Ciudad</th>
+                <th scope="col">Referencia</th>
+
+
                 <th scope="col">Acciones</th>
+
+
             </tr>
         </thead>
         <tbody>
             @foreach ($incidents as $incident)
-                <tr>
-                    <th scope="row">{{ $incident->id }}</th>                    
-                    <td>{{ $incident->tipo }}</td>
-                    <td>{{ $incident->estado_carretera }}</td>
-                    <td>{{ $incident->estado_trafico }}</td>
-                    <td>{{ $incident->foto_url }}</td>
-                    <td>
-                        <a href="{{ route('incident.show', $incident->id) }}" class="btn btn-primary">Ver</a>
-                        <a href="{{ route('incident.edit', $incident->id) }}" class="btn btn-primary">Editar</a>
-                        <form action="{{ route('incident.destroy', $incident->id) }}" method="POST">
-                            @csrf
-                            @method('DELETE')
-                            <button type="submit" class="btn btn-danger">Eliminar</button>
-                        </form>
-                    </td>
-                </tr>
+           
+            <tr></tr>
+                <td>{{ $incident->user->id }}</td>
+                <td>{{ $incident->user->name }}</td>
+                <td>{{ $incident->tipo }}</td>
+                <td>{{ $incident->estado_carretera }}</td>
+                <td>{{ $incident->estado_trafico }}</td>              
+                <td><img src="{{ $incident->foto_url }}" alt="" width="100"></td>
+
+
+
+                <td>{{ $incident->location->region }}</td>
+                <td>{{ $incident->location->provincia }}</td>
+                <td>{{ $incident->location->ciudad }}</td>
+                <td>{{ $incident->location->referencia }}</td>
+                
+               
+                <td>
+                    <a href="{{ route('incident.show', $incident->id) }}" class="btn btn-info">Ver</a>
+                    <a href="{{ route('incident.edit', $incident->id) }}" class="btn btn-warning">Editar</a>
+                    <form action="{{ route('incident.destroy', $incident->id) }}" method="POST" style="display: inline">
+                        @csrf
+                        @method('DELETE')
+                        <button type="submit" class="btn btn-danger">Eliminar</button>
+                    </form>
+                </td>
+                
             @endforeach
         </tbody>
 </body>

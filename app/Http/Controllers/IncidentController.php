@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Incident;
 use Illuminate\Http\Request;
+use App\Models\Location;
 
 class IncidentController extends Controller
 {
@@ -14,9 +15,13 @@ class IncidentController extends Controller
      */
     public function index()
     {
-        //mostrar todos los incidentes
+        //mostrar todos los incidentes optimizado
 
-        $incidents = Incident::all();
+        $incidents = Incident::with('user')->get(); 
+        $locations= Incident::with('location')->get();
+
+
+       
         return view('incident.index', compact('incidents'));
 
     }
@@ -45,35 +50,50 @@ class IncidentController extends Controller
     {
         //almacenar un incidente
 
+
+
         $user_id =auth()->user()->id;
-        $name =auth()->user()->name;
-        //dd($user_id, $user_name );
+        $user_name =auth()->user()->name;
+        //dd($user_id );
 
-       
-        if($request->hasFile('featured')){
-            $file = $request->file('featured');
+        if($request->hasFile('foto_url')){
+            $file = $request->file('foto_url');
             $name = time().$file->getClientOriginalName();
-            $file->move(public_path().'/images/', $name);
-                       
-        }
+            $file->move(public_path().'/fotos/', $name);
 
+        }
+        $path = '/fotos/'.$name;
+        
        
         $incident = new Incident();
         $incident->user_id = $user_id;
+        $incident->nombre_usuario = $user_name;        
         $incident->tipo = $request->tipo;
         $incident->estado_carretera = $request->estado_carretera;
         $incident->estado_trafico = $request->estado_trafico;
-        $incident->foto_url = $name;
-        $incident->save();
-
-        $request->validate([
-            'tipo' => 'required',
-            'estado_carretera' => 'required',
-            'estado_trafico' => 'required',
-            'foto_url' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-        ]);
-      
+        $incident->foto_url = $path;    
+       
+        $incident->save();  
         
+        $id_incidents=$incident->id;
+
+        // crear una location con el id del incidente creado
+       
+        $location= new Location();
+        $location->incident_id = $id_incidents;
+        $location->region = $request->region;
+        $location->provincia = $request->provincia;
+        $location->ciudad = $request->ciudad;
+        $location->referencia = $request->referencia;
+        $location->save();
+        
+     
+
+
+        
+       
+
+
         
         return redirect()->route('incident.index');
     }

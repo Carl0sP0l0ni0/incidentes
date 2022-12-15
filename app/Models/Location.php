@@ -12,7 +12,7 @@ class Location extends Model
         'incident_id',
         'region',
         'provincia',
-        'ciudad',
+        'ciudad', 
         'referencia',
     ];
 }

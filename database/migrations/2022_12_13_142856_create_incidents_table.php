@@ -16,6 +16,7 @@ return new class extends Migration
         Schema::create('incidents', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained(); //verificar si relaciono
+            $table->string("nombre_usuario");
             $table->string('tipo');
             $table->string('estado_carretera'); 
             $table->string('estado_trafico'); //nivel de estado de trafico
